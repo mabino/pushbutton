@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("#send").click(function() {
+        var message = prompt("What is your message?");
+
+        if (message === null || message === '') {
+          alert("The message cannot be empty.");
+          return;
+        }
+
+        if (message.length > 140) {
+          alert("Message is too long, please limit to 140 characters or less.");
+          return;
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: 'push.php',
+          data: { message: message },
+          success: function(data) {
+            if (data.success) {
+              alert("Notification sent successfully");
+            } else {
+              alert("Error sending notification: " + data.error);
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            alert("Error sending notification: " + errorThrown);
+          },
+          dataType: 'json'
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+  <button id="send">Send Notification</button>
+</body>
+</html>
